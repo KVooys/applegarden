@@ -7,7 +7,7 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.orm.jpa.JpaSystemException
-import java.time.Instant
+import java.time.LocalDateTime
 import java.util.*
 
 @DataJpaTest
@@ -25,12 +25,16 @@ class ApplicationFormRepositoryTest @Autowired constructor(
     @Test
     fun shouldSaveAndRetrieveValidApplicationForm() {
         val applicationForm = ApplicationForm()
+        val now: LocalDateTime = LocalDateTime.now()
         applicationForm.id = 123L
-        applicationForm.createdDate = Instant.ofEpochSecond(123456)
+        applicationForm.firstName = "Art"
+        applicationForm.lastName = "the Bard"
+        applicationForm.createdDate = now
         applicationFormRepository.save(applicationForm)
         val retrievedForm: Optional<ApplicationForm> = applicationFormRepository.findById(123L)
         assertTrue(retrievedForm.get().id == 123L)
-        assertTrue(retrievedForm.get().createdDate == Instant.ofEpochSecond(123456))
-
+        assertTrue(retrievedForm.get().firstName == "Art")
+        assertTrue(retrievedForm.get().lastName == "the Bard")
+        assertTrue(retrievedForm.get().createdDate == now)
     }
 }
